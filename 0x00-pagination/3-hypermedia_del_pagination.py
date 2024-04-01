@@ -44,7 +44,7 @@ class Server:
         3. Deletion-resilient hypermedia pagination
         """
         indexed_dataset = self.indexed_dataset()
-        assert index >= 0 and index < len(indexed_dataset)
+        assert index >= 0 and index < list(indexed_dataset.keys())[-1]
         data = []
         next_index = None
 
