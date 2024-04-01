@@ -39,16 +39,18 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = 0, page_size: int = 10) -> Dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
         3. Deletion-resilient hypermedia pagination
         """
         indexed_dataset = self.indexed_dataset()
         last_index = list(indexed_dataset.keys())[-1]
-        assert index >= 0 and index <= last_index
-        assert page_size > 0
+
+        assert isinstance(index, int) and index >= 0 and index <= last_index
+        assert isinstance(page_size, int) and page_size > 0
+
         data = []
-        next_index = None 
+        next_index = None
 
         for k, v in indexed_dataset.items():
             if len(data) == page_size:
