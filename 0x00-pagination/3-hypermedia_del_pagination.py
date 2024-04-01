@@ -46,7 +46,7 @@ class Server:
         indexed_dataset = self.indexed_dataset()
         assert index >= 0 and index < list(indexed_dataset.keys())[-1]
         data = []
-        next_index = None
+        next_index = list(indexed_dataset.keys())[-1]
 
         for k, v in indexed_dataset.items():
             if len(data) == page_size:
