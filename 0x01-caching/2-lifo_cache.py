@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-1-fifo_cache.py
+2-lifo_cache.py
 """
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class FIFOCache(BaseCaching):
+class LIFOCache(BaseCaching):
     """
-    FIFOCache
+    LIFOCache
     """
     def __init__(self):
         """
         Init.
         """
         super().__init__()
-        self.cache_queue = []
+        self.cache_stack = []
 
     def put(self, key, value):
         """
@@ -27,7 +27,7 @@ class FIFOCache(BaseCaching):
         key_is_not_in_cache = key not in self.cache_data.keys()
 
         if cache_is_full and key_is_not_in_cache:
-            discard = self.cache_queue.pop(0)
+            discard = self.cache_stack.pop()
             del self.cache_data[discard]
 
             print(f"DISCARD: {discard}")
@@ -35,11 +35,11 @@ class FIFOCache(BaseCaching):
         self.cache_data[key] = value
 
         try:
-            self.cache_queue.remove(key)
+            self.cache_stack.remove(key)
         except (ValueError):
             pass
 
-        self.cache_queue.append(key)
+        self.cache_stack.append(key)
 
     def get(self, key):
         """
