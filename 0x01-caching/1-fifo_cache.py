@@ -14,7 +14,7 @@ class FIFOCache(BaseCaching):
         Init.
         """
         super().__init__()
-        self.cache_queue = []
+        self._cache_queue = []
 
     def put(self, key, value):
         """
@@ -23,30 +23,23 @@ class FIFOCache(BaseCaching):
         if not key or not value:
             return
 
-        cache_is_full = len(self.cache_data) == self.MAX_ITEMS
-        key_is_not_in_cache = key not in self.cache_data.keys()
+        cache_data = self.cache_data
 
-        if cache_is_full and key_is_not_in_cache:
-            discard = self.cache_queue.pop(0)
-            del self.cache_data[discard]
+        if len(cache_data) == self.MAX_ITEMS and key not in cache_data:
+            discard = self._cache_queue.pop(0)
+            del cache_data[discard]
 
             print(f"DISCARD: {discard}")
 
-        self.cache_data[key] = value
+        cache_data[key] = value
 
-        try:
-            self.cache_queue.remove(key)
-        except (ValueError):
-            pass
+        if key in self._cache_queue:
+            self._cache_queue.remove(key)
 
-        self.cache_queue.append(key)
+        self._cache_queue.append(key)
 
     def get(self, key):
         """
         Gets item from cache.
         """
-        if key:
-            try:
-                return self.cache_data[key]
-            except (KeyError):
-                pass
+        return self.cache_data.get(key)

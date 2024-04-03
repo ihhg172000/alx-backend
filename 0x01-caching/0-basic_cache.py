@@ -20,8 +20,4 @@ class BasicCache(BaseCaching):
         """
         Gets item from cache.
         """
-        if key:
-            try:
-                return self.cache_data[key]
-            except (KeyError):
-                pass
+        return self.cache_data.get(key)

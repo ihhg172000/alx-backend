@@ -18,22 +18,13 @@ class LFUCache(BaseCaching):
 
         cache_data = self.cache_data
 
-        cache_is_full = len(cache_data) == self.MAX_ITEMS
-        key_is_not_in_cache = key not in cache_data.keys()
-
-        if cache_is_full and key_is_not_in_cache:
-            keys = list(cache_data.keys())
-            discard = keys[0]
-
-            for k in keys:
-                if cache_data[k]["score"] < cache_data[discard]["score"]:
-                    discard = k
-
+        if len(cache_data) == self.MAX_ITEMS and key not in cache_data:
+            discard = min(cache_data, key=lambda k: cache_data[k]["score"])
             del cache_data[discard]
 
             print(f"DISCARD: {discard}")
 
-        if key_is_not_in_cache:
+        if key not in cache_data:
             cache_data[key] = {"value": value, "score": 1}
         else:
             cache_data[key]["value"] = value
@@ -43,21 +34,14 @@ class LFUCache(BaseCaching):
         """
         Gets item from cache.
         """
-        if key:
-            cache_data = self.cache_data
-
-            try:
-                cache_data[key]["score"] += 1
-                return cache_data[key]["value"]
-            except (KeyError):
-                pass
+        if key in self.cache_data:
+            self.cache_data[key]["score"] += 1
+            return self.cache_data[key]["value"]
 
     def print_cache(self):
         """
         Prints the cache.
         """
-        cache_data = self.cache_data
-
         print("Current cache:")
-        for key in sorted(cache_data.keys()):
-            print("{}: {}".format(key, cache_data.get(key).get("value")))
+        for key in sorted(self.cache_data.keys()):
+            print("{}: {}".format(key, self.cache_data[key]["value"]))

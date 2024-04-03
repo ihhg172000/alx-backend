@@ -14,7 +14,7 @@ class MRUCache(BaseCaching):
         Init.
         """
         super().__init__()
-        self.cache_stack = []
+        self._cache_stack = []
 
     def put(self, key, value):
         """
@@ -23,33 +23,27 @@ class MRUCache(BaseCaching):
         if not key or not value:
             return
 
-        cache_is_full = len(self.cache_data) == self.MAX_ITEMS
-        key_is_not_in_cache = key not in self.cache_data.keys()
+        cache_data = self.cache_data
 
-        if cache_is_full and key_is_not_in_cache:
-            discard = self.cache_stack.pop()
+        if len(cache_data) == self.MAX_ITEMS and key not in cache_data:
+            discard = self._cache_stack.pop()
             del self.cache_data[discard]
 
             print(f"DISCARD: {discard}")
 
         self.cache_data[key] = value
 
-        try:
-            self.cache_stack.remove(key)
-        except (ValueError):
-            pass
+        if key in self._cache_stack:
+            self._cache_stack.remove(key)
 
-        self.cache_stack.append(key)
+        self._cache_stack.append(key)
 
     def get(self, key):
         """
         Gets item from cache.
         """
-        if key and key in self.cache_data.keys():
-            try:
-                self.cache_stack.remove(key)
-            except (ValueError):
-                pass
+        if key in self._cache_stack:
+            self._cache_stack.remove(key)
+            self._cache_stack.append(key)
 
-            self.cache_stack.append(key)
-            return self.cache_data[key]
+        return self.cache_data.get(key)
