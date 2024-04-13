@@ -3,8 +3,9 @@
 0-app.py
 """
 from flask import Flask, render_template, request, g
-from flask_babel import Babel
+from flask_babel import Babel, format_datetime
 import pytz
+import datetime
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -88,7 +89,15 @@ def index():
     user = g.get("user")
     username = user.get("name") if user else None
 
-    return render_template("7-index.html", username=username)
+    current_time = datetime.datetime.now()
+    formatted_time = format_datetime(current_time)
+
+
+    return render_template(
+        "index.html",
+        username=username,
+        current_time= formatted_time
+    )
 
 
 if __name__ == "__main__":
