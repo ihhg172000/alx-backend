@@ -49,7 +49,7 @@ def get_locale():
         return locale
 
     user = g.get("user")
-    locale = user.get("locale")
+    locale = user.get("locale") if user else None
 
     if locale and locale in app.config["LANGUAGES"]:
         return locale
