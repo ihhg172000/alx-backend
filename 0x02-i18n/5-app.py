@@ -26,13 +26,18 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
-@app.before_request
 def get_user():
     """ get_user """
     user_id = request.args.get("login_as")
 
     if user_id and user_id.isdigit():
-        g.user = users.get(int(user_id))
+        return users.get(int(user_id))
+
+
+@app.before_request
+def before_request():
+    """ before_request """
+    g.user = get_user()
 
 
 @babel.localeselector
