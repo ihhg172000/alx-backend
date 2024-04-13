@@ -55,13 +55,9 @@ def get_locale():
 def index():
     """ index """
     user = g.get("user")
+    username = user.get("name") if user else None
 
-    if user:
-        msg = _("logged_in_as") % {"username": user["name"]}
-    else:
-        msg = _("not_logged_in")
-
-    return render_template("5-index.html", msg=msg)
+    return render_template("5-index.html", username=username)
 
 
 if __name__ == "__main__":

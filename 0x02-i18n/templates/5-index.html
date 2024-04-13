@@ -7,6 +7,12 @@
   </head>
   <body>
     <h1>{{ _('home_header') }}</h1>
-    <p>{{ msg }}</p>
+    <p>
+      {% if username %}
+        {{ _('logged_in_as', username=username) }}
+      {% else %}
+        {{ _('not_logged_in') }}
+      {% endif %}
+    </p>
   </body>
 </html>
